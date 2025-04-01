@@ -818,9 +818,9 @@ struct ImDrawDataBuilder
 
 struct ImGuiStyleVarInfo
 {
-    ImU32           Count : 8;      // 1+
-    ImGuiDataType   DataType : 8;
-    ImU32           Offset : 16;    // Offset in parent structure
+    ImU8            Count;      // 1+
+    ImU8            DataType;
+    ImU16           Offset;    // Offset in parent structure
     void* GetVarPtr(void* parent) const { return (void*)((unsigned char*)parent + Offset); }
 };
 
@@ -1769,7 +1769,7 @@ struct ImGuiBoxSelectState
     bool                    IsStartedFromVoid;  // Starting click was not from an item.
     bool                    IsStartedSetNavIdOnce;
     bool                    RequestClear;
-    ImGuiKeyChord           KeyMods : 16;       // Latched key-mods for box-select logic.
+    ImU16                   KeyMods;       // Latched key-mods for box-select logic.
     ImVec2                  StartPosRel;        // Start position in window-contents relative space (to support scrolling)
     ImVec2                  EndPosRel;          // End position in window-contents relative space
     ImVec2                  ScrollAccum;        // Scrolling accumulator (to behave at high-frame spaces)
@@ -2018,7 +2018,7 @@ struct ImGuiStackLevelInfo
     ImGuiID                 ID;
     ImS8                    QueryFrameCount;            // >= 1: Query in progress
     bool                    QuerySuccess;               // Obtained result from DebugHookIdInfo()
-    ImGuiDataType           DataType : 8;
+    ImU8                    DataType;
     char                    Desc[57];                   // Arbitrarily sized buffer to hold a result (FIXME: could replace Results[] with a chunk stream?) FIXME: Now that we added CTRL+C this should be fixed.
 
     ImGuiStackLevelInfo()   { memset(this, 0, sizeof(*this)); }
@@ -2134,7 +2134,7 @@ struct ImGuiContext
     bool                    ActiveIdHasBeenEditedBefore;        // Was the value associated to the widget Edited over the course of the Active state.
     bool                    ActiveIdHasBeenEditedThisFrame;
     bool                    ActiveIdFromShortcut;
-    int                     ActiveIdMouseButton : 8;
+    ImU8                    ActiveIdMouseButton;
     ImVec2                  ActiveIdClickOffset;                // Clicked offset from upper-left corner, if applicable (currently only set by ButtonBehavior)
     ImGuiWindow*            ActiveIdWindow;
     ImGuiInputSource        ActiveIdSource;                     // Activating source: ImGuiInputSource_Mouse OR ImGuiInputSource_Keyboard OR ImGuiInputSource_Gamepad
@@ -2543,9 +2543,9 @@ struct IMGUI_API ImGuiWindow
     ImS8                    HiddenFramesCannotSkipItems;        // Hide the window for N frames while allowing items to be submitted so we can measure their size
     ImS8                    HiddenFramesForRenderOnly;          // Hide the window until frame N at Render() time only
     ImS8                    DisableInputsFrames;                // Disable window interactions for N frames
-    ImGuiCond               SetWindowPosAllowFlags : 8;         // store acceptable condition flags for SetNextWindowPos() use.
-    ImGuiCond               SetWindowSizeAllowFlags : 8;        // store acceptable condition flags for SetNextWindowSize() use.
-    ImGuiCond               SetWindowCollapsedAllowFlags : 8;   // store acceptable condition flags for SetNextWindowCollapsed() use.
+    ImU8                    SetWindowPosAllowFlags;             // store acceptable condition flags for SetNextWindowPos() use.
+    ImU8                    SetWindowSizeAllowFlags;            // store acceptable condition flags for SetNextWindowSize() use.
+    ImU8                    SetWindowCollapsedAllowFlags;       // store acceptable condition flags for SetNextWindowCollapsed() use.
     ImVec2                  SetWindowPosVal;                    // store window position when using a non-zero Pivot (position set needs to be processed when we know the window size)
     ImVec2                  SetWindowPosPivot;                  // store window pivot for positioning. ImVec2(0, 0) when positioning from top-left corner; ImVec2(0.5f, 0.5f) for centering; ImVec2(1, 1) for bottom right.
 
@@ -2748,9 +2748,9 @@ struct ImGuiTableColumn
     ImS8                    NavLayerCurrent;                // ImGuiNavLayer in 1 byte
     ImU8                    AutoFitQueue;                   // Queue of 8 values for the next 8 frames to request auto-fit
     ImU8                    CannotSkipItemsQueue;           // Queue of 8 values for the next 8 frames to disable Clipped/SkipItem
-    ImU8                    SortDirection : 2;              // ImGuiSortDirection_Ascending or ImGuiSortDirection_Descending
-    ImU8                    SortDirectionsAvailCount : 2;   // Number of available sort directions (0 to 3)
-    ImU8                    SortDirectionsAvailMask : 4;    // Mask of available sort directions (1-bit each)
+    ImU8                    SortDirection;                  // ImGuiSortDirection_Ascending or ImGuiSortDirection_Descending
+    ImU8                    SortDirectionsAvailCount;       // Number of available sort directions (0 to 3)
+    ImU8                    SortDirectionsAvailMask;        // Mask of available sort directions (1-bit each)
     ImU8                    SortDirectionsAvailList;        // Ordered list of available sort directions (2-bits each, total 8-bits)
 
     ImGuiTableColumn()
@@ -2826,8 +2826,8 @@ struct IMGUI_API ImGuiTable
     float                       RowCellPaddingY;            // Top and bottom padding. Reloaded during row change.
     float                       RowTextBaseline;
     float                       RowIndentOffsetX;
-    ImGuiTableRowFlags          RowFlags : 16;              // Current row flags, see ImGuiTableRowFlags_
-    ImGuiTableRowFlags          LastRowFlags : 16;
+    ImU16                       RowFlags;                   // Current row flags, see ImGuiTableRowFlags_
+    ImU16                       LastRowFlags;
     int                         RowBgColorCounter;          // Counter for alternating background colors (can be fast-forwarded by e.g clipper), not same as CurrentRow because header rows typically don't increase this.
     ImU32                       RowBgColor[2];              // Background color override for current row.
     ImU32                       BorderColorStrong;
@@ -2955,9 +2955,9 @@ struct ImGuiTableColumnSettings
     ImGuiTableColumnIdx     Index;
     ImGuiTableColumnIdx     DisplayOrder;
     ImGuiTableColumnIdx     SortOrder;
-    ImU8                    SortDirection : 2;
-    ImS8                    IsEnabled : 2; // "Visible" in ini file
-    ImU8                    IsStretch : 1;
+    ImU8                    SortDirection;
+    ImS8                    IsEnabled; // "Visible" in ini file
+    ImU8                    IsStretch;
 
     ImGuiTableColumnSettings()
     {
